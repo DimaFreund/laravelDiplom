@@ -1,72 +1,13 @@
 // create an array with nodes
-var nodes = new vis.DataSet([
-    {id: 1, label: '1', x: -300, y: -450},
-    {id: 2, label: '2', x: -150, y: -450},
-    {id: 3, label: '3', x: 0, y: -450},
-    {id: 4, label: '4', x: 150, y: -450},
-    {id: 5, label: '5', x: -375, y: -300},
-    {id: 6, label: '6', x: -225, y: -300},
-    {id: 7, label: '7', x: -75, y: -300},
-    {id: 8, label: '8', x: 75, y: -300},
-    {id: 9, label: '9', x: 225, y: -300},
-    {id: 10, label: '10', x: -300, y: -150},
-    {id: 11, label: '11', x: -150, y: -150},
-    {id: 12, label: '12', x: -0, y: -150},
-    {id: 13, label: '13', x: 150, y: -150},
-    {id: 14, label: '14', x: -150, y: 0},
-    {id: 15, label: '15', x: 0, y: 0},
-    {id: 16, label: '16', x: -225, y: 150},
-    {id: 17, label: '17', x: -75, y: 150},
-    {id: 18, label: '18', x: 75, y: 150},
-    {id: 19, label: '19', x: -150, y: 300},
-    {id: 20, label: '20', x: 0, y: 300},
-    {id: 21, label: '21', x: -75, y: 450},
-    {id: 22, label: '22', x: -75, y: 600},
-]);
+var jsonInfo, dataInfo;
+
+jsonInfo = JSON.parse($('#json').val());
+dataInfo = JSON.parse($('#data').val());
+
+var nodes = new vis.DataSet(jsonInfo);
 
 // create an array with edges
-var edges = new vis.DataSet([
-    {from: 1, to: 5},
-    {from: 1, to: 6},
-    {from: 2, to: 6},
-    {from: 3, to: 6},
-    {from: 3, to: 7},
-    {from: 3, to: 8},
-    {from: 4, to: 7},
-    {from: 4, to: 8},
-    {from: 4, to: 9},
-    {from: 5, to: 10},
-    {from: 6, to: 10},
-    {from: 6, to: 11},
-    {from: 7, to: 10},
-    {from: 7, to: 11},
-    {from: 7, to: 12},
-    {from: 8, to: 12},
-    {from: 8, to: 13},
-    {from: 9, to: 13},
-    {from: 10, to: 14},
-    {from: 10, to: 16},
-    {from: 11, to: 14},
-    {from: 11, to: 15},
-    {from: 12, to: 14},
-    {from: 12, to: 15},
-    {from: 13, to: 15},
-    {from: 13, to: 18},
-    {from: 14, to: 16},
-    {from: 14, to: 17},
-    {from: 14, to: 19},
-    {from: 15, to: 17},
-    {from: 15, to: 18},
-    {from: 15, to: 20},
-    {from: 16, to: 19},
-    {from: 17, to: 19},
-    {from: 17, to: 20},
-    {from: 17, to: 21},
-    {from: 18, to: 20},
-    {from: 19, to: 21},
-    {from: 20, to: 21},
-    {from: 21, to: 22},
-]);
+var edges = new vis.DataSet(dataInfo);
 
 // create a network
 var container = document.getElementById('mynetwork');
@@ -270,6 +211,7 @@ function descriptionActor() {
 }
 
 $('#saveProjects').submit(function(event) {
-    alert();
-    console.log('auuuuuu');
+    console.log(JSON.stringify(objectToArray(network.getPositions())));
+    $('#json').val(JSON.stringify(objectToArray(network.getPositions())));
+    $('#data').val(JSON.stringify(network.body.data.edges._data));
 });

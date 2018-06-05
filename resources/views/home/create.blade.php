@@ -8,7 +8,8 @@
                 {!! Form::open(['route' => ['home.store'], 'id' => 'saveProjects']) !!}
                 <div class="form-group">
                     <input type="text" class="form-control" name="name">
-                    <input type="text" name="json" class="form-control">
+                    <input id="json" type="text" name="json" class="form-control">
+                    <input id="data" type="text" name="data" class="form-control">
                     <br>
                     <button class="btn btn-success">Submit</button>
                 </div>
@@ -16,7 +17,9 @@
             </div>
         </div>
     </div>
-@endsection
+
+
+
 
 
 <div class="">
@@ -59,3 +62,5 @@
         </div>
     </div>
 </div>
+
+@endsection

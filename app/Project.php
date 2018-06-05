@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-	protected $fillable = ['name', 'json'];
+	protected $fillable = ['name', 'json', 'data'];
 
 	public function user()
 	{

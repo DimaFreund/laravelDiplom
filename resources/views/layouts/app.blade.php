@@ -16,18 +16,18 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
-
+    <script type="text/javascript" src="{{ asset('js/vis.js') }}"></script>
     <!-- Styles -->
+    <link href="{{ asset('css/vis-network.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
-    <script type="text/javascript" src="{{ asset('js/vis.js') }}"></script>
-    <link href="{{ asset('css/vis-network.min.css') }}" rel="stylesheet" type="text/css"/>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
+
 </head>
 <body>
-    <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -78,6 +78,6 @@
         <main class="py-4">
             @yield('content')
         </main>
-    </div>
+    <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
 </body>
 </html>
