@@ -89,8 +89,10 @@ function exportNetwork() {
 
     nodes.forEach(function(item, key, arr) {
         matrix[item.id] = [];
+        original_matrix[item.id] = [];
         nodes.forEach(function(item_inner, key_inner, arr_inner) {
             matrix[item.id][item_inner.id] = 0;
+            original_matrix[item.id][item_inner.id] = 0;
         })
     });
 
@@ -105,9 +107,9 @@ function exportNetwork() {
 
     Object.keys(arrayFromTo).forEach(function (item, key, arr) {
         matrix[arrayFromTo[item].from][arrayFromTo[item].to] = 1;
+        original_matrix[arrayFromTo[item].from][arrayFromTo[item].to] = 1;
     })
 
-    original_matrix = matrix.clone();
     drawTable(matrix);
     var potoks = createPotoks(matrix);
     console.log(potoks);
@@ -130,18 +132,18 @@ function objectToArray(obj) {
     });
 }
 
-Object.prototype.clone = function() {
-    var newObj = (this instanceof Array) ? [] : {};
-    for (i in this) {
-        if (i == 'clone')
-            continue;
-        if (this[i] && typeof this[i] == "object") {
-            newObj[i] = this[i].clone();
-        }
-        else
-            newObj[i] = this[i]
-    } return newObj;
-};
+// Object.prototype.clonematrix = function() {
+//     var newObj = (this instanceof Array) ? [] : {};
+//     for (i in this) {
+//         if (i == 'clone')
+//             continue;
+//         if (this[i] && typeof this[i] == "object") {
+//             newObj[i] = this[i].clone();
+//         }
+//         else
+//             newObj[i] = this[i]
+//     } return newObj;
+// };
 
 function addConnections(elem, index) {
     // need to replace this with a tree of the network, then get child direct children of the element
