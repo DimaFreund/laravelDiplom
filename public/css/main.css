@@ -1,0 +1,96 @@
+body, select {
+    font: 10pt sans;
+}
+
+#mynetwork {
+    position: relative;
+    width: 100%;
+    height: 800px;
+    border: 1px solid lightgray;
+}
+
+table.legend_table {
+    font-size: 11px;
+    border-width: 1px;
+    border-color: #d3d3d3;
+    border-style: solid;
+}
+
+table.legend_table, td {
+    border-width: 1px;
+    border-color: #d3d3d3;
+    border-style: solid;
+    padding: 2px;
+}
+
+div.table_content {
+    width: 80px;
+    text-align: center;
+}
+
+div.table_description {
+    width: 100px;
+}
+
+#operation {
+    font-size: 28px;
+}
+
+#network-popUp {
+    display: none;
+    position: absolute;
+    top: 350px;
+    left: 170px;
+    z-index: 299;
+    width: 250px;
+    height: 120px;
+    background-color: #f9f9f9;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #5394ed;
+    padding: 10px;
+    text-align: center;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    z-index: 1;
+}
+td, th, .row, .col, .ff-fix {
+    cursor: pointer;
+    padding: 10px;
+    position: relative;
+}
+th,
+td{
+    border: 1px solid #CCC;
+    width: 33.33%;
+}
+.table-section td:hover::before,
+.table-section  .row:hover::before,
+.table-section .ff-fix:hover::before {
+    background-color: #ffa;
+    content: '\00a0';
+    height: 100%;
+    left: -5000px;
+    position: absolute;
+    top: 0;
+    width: 10000px;
+    z-index: -1;
+}
+.table-section td:hover::after,
+.table-section .col:hover::after,
+.table-section .ff-fix:hover::after {
+    background-color: #ffa;
+    content: '\00a0';
+    height: 10000px;
+    left: 0;
+    position: absolute;
+    top: -5000px;
+    width: 100%;
+    z-index: -1;
+}
+

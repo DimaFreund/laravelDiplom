@@ -6,13 +6,13 @@
         <h3>Edit project # - {{$project->id}}</h3>
         <div class="row">
             <div class="col-md-12">
-                <form action="/home/{{$project->id}}/update" method="post">
+                <form id="saveProjects" action="/home/{{$project->id}}/update" method="post">
                     <div class="form-group">
                         {{csrf_field()}}
                         {{ method_field('post') }}
                         <input type="text" class="form-control" name="name" value="{{$project->name}}">
-                        <input id="json" type="text" name="json" class="form-control" value="{{$project->json}}">
-                        <input id="data" type="text" name="data" class="form-control" value="{{$project->data}}">
+                        <input id="json" type="hidden" name="json" class="form-control" value="{{$project->json}}">
+                        <input id="data" type="hidden" name="data" class="form-control" value="{{$project->data}}">
                         <br>
                         <button class="btn btn-warning">Submit</button>
                     </div>
@@ -52,7 +52,7 @@
             <div id="mynetwork"></div>
 
         </div>
-        <div class="col-md-6">
+        <div class="table-section col-md-6">
             <div class="container">
                 <h2>Bordered Table</h2>
                 <p>The .table-bordered class adds borders to a table:</p>

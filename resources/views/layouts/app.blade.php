@@ -20,6 +20,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/vis-network.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 

@@ -22,10 +22,10 @@
                 @foreach($projects as $project)
                 <tr>
                     <td>{{$project->id}}</td>
-                    <td><a href="{{route('home.show', $project->id)}}">{{$project->name}}</a></td>
+                    <td><a href="{{route('home.edit', $project->id)}}">{{$project->name}}</a></td>
                     <td>{{$project->created_at}}</td>
                     <td>
-                        <a class="btn btn-warning" href="{{route('home.show', $project->id)}}"><i class="glyphicon glyphicon-eye-open">open</i></a>
+                        {{--<a class="btn btn-warning" href="{{route('home.show', $project->id)}}"><i class="glyphicon glyphicon-eye-open">open</i></a>--}}
                         <a class="btn btn-dark" href="{{route('home.edit', $project->id)}}"><i class="glyphicon glyphicon-edit">edit</i></a>
                         <form style="display: inline-block" action="/home/{{$project->id}}/destroy" method="post">
                             <div class="form-group">

@@ -8,8 +8,8 @@
                 {!! Form::open(['route' => ['home.store'], 'id' => 'saveProjects']) !!}
                 <div class="form-group">
                     <input type="text" class="form-control" name="name">
-                    <input id="json" type="text" name="json" class="form-control">
-                    <input id="data" type="text" name="data" class="form-control">
+                    <input id="json" type="hidden" name="json" class="form-control">
+                    <input id="data" type="hidden" name="data" class="form-control">
                     <br>
                     <button class="btn btn-success">Submit</button>
                 </div>
@@ -49,7 +49,7 @@
         <div id="mynetwork"></div>
 
     </div>
-    <div class="col-md-6">
+    <div class="table-section col-md-6">
         <div class="container">
             <h2>Bordered Table</h2>
             <p>The .table-bordered class adds borders to a table:</p>

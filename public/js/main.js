@@ -1,13 +1,20 @@
-// create an array with nodes
-var jsonInfo, dataInfo;
+//create an array with nodes
+ var jsonInfo, dataInfo;
 
-jsonInfo = JSON.parse($('#json').val());
-dataInfo = JSON.parse($('#data').val());
+jsonInfo = $('#json').val();
+dataInfo = $('#data').val()
+if(jsonInfo)
+ jsonInfo = JSON.parse(jsonInfo);
+if(dataInfo)
+ dataInfo = JSON.parse(dataInfo);
+ console.log(jsonInfo);
+ console.log(dataInfo);
 
-var nodes = new vis.DataSet(jsonInfo);
+ var nodes = new vis.DataSet(jsonInfo);
 
-// create an array with edges
-var edges = new vis.DataSet(dataInfo);
+ // create an array with edges
+ var edges = new vis.DataSet(dataInfo);
+
 
 // create a network
 var container = document.getElementById('mynetwork');
@@ -210,8 +217,39 @@ function descriptionActor() {
 
 }
 
+function objectToArrayWithoutKey(object) {
+    var result = [];
+    for(var key in object) {
+        result.push(object[key]);
+    }
+    return JSON.stringify(result);
+}
+
+function setParamsNodes(nodes) {
+    var result = [];
+
+    for( var key in nodes) {
+        nodes[key].id = key;
+        nodes[key].label = key;
+        result.push(nodes[key]);
+    }
+
+    console.log('nodes array',result);
+    return JSON.stringify(result);
+}
+
 $('#saveProjects').submit(function(event) {
-    console.log(JSON.stringify(objectToArray(network.getPositions())));
-    $('#json').val(JSON.stringify(objectToArray(network.getPositions())));
-    $('#data').val(JSON.stringify(network.body.data.edges._data));
+
+    var nodesFinaly = setParamsNodes(network.getPositions());
+    var dataFinally = objectToArrayWithoutKey(network.body.data.edges._data);
+    var nodes = new vis.DataSet();
+    console.log(network);
+    console.log(network.getConnectedEdges());
+    console.log(network.body.data.edges._data);
+    console.log('result');
+    console.log(JSON.stringify(nodesFinaly));
+    $('#json').val(nodesFinaly);
+    $('#data').val(dataFinally);
+
+    return true;
 });
