@@ -22,8 +22,8 @@
 
 
 
-<div class="">
-    <div class="col-md-6">
+<div class="container">
+    <div class="">
         <p>
             <br>
             Create a simple network with some nodes and edges.
@@ -49,7 +49,7 @@
         <div id="mynetwork"></div>
 
     </div>
-    <div class="table-section col-md-6">
+    <div class="table-section">
         <div class="container">
             <h2>Bordered Table</h2>
             <p>The .table-bordered class adds borders to a table:</p>
@@ -60,6 +60,21 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="potoks-section">
+        <br>
+        <h3>Potoks</h3>
+        <ul id="potoks"></ul>
+    </div>
+    <div class="actors-section">
+        <br>
+        <h3>Actors</h3>
+        <ul id="actors"></ul>
+    </div>
+    <div class="data-section">
+        <br>
+        <h3>Data</h3>
+        <ul id="data-generation"></ul>
     </div>
 </div>
 

@@ -30,7 +30,7 @@ var options = {
             "hover": {}
         },
         "font": {
-            "size": 15,
+            "size": 22,
             "strokeWidth": null
         },
         "scaling": {
@@ -75,31 +75,45 @@ var network = new vis.Network(container, data, options);
 network.body.data.counter = 0;
 
 var matrix = [];
-
+var original_matrix = [];
 function exportNetwork() {
 
     var nodes = objectToArray(network.getPositions());
 
-    for (var i = 0; i <= 22; i++) {
-        matrix[i] = [];
-        for (var y = 1; y <= 22; y++) {
-            matrix[i][y] = 0;
-        }
-    }
+    // for (var i = 0; i <= network.body.data.nodes.length; i++) {
+    //     matrix[i] = [];
+    //     for (var y = 0; y <= network.body.data.nodes.length; y++) {
+    //         matrix[i][y] = 0;
+    //     }
+    // }
 
+    nodes.forEach(function(item, key, arr) {
+        matrix[item.id] = [];
+        nodes.forEach(function(item_inner, key_inner, arr_inner) {
+            matrix[item.id][item_inner.id] = 0;
+        })
+    });
+
+    console.log(matrix);
 
     nodes.forEach(addConnections);
     // console.log(nodes);
 
     var arrayFromTo = network.body.data.edges._data;
 
-    // console.log(arrayFromTo);
+
 
     Object.keys(arrayFromTo).forEach(function (item, key, arr) {
         matrix[arrayFromTo[item].from][arrayFromTo[item].to] = 1;
     })
+
+    original_matrix = matrix.clone();
     drawTable(matrix);
-    descriptionActor(matrix);
+    var potoks = createPotoks(matrix);
+    console.log(potoks);
+    displayPotoks(potoks);
+    descriptionActors(original_matrix, potoks);
+
 //
 //      // pretty print node data
 //      var exportValue = JSON.stringify(nodes, undefined, 2);
@@ -115,6 +129,19 @@ function objectToArray(obj) {
         return obj[key];
     });
 }
+
+Object.prototype.clone = function() {
+    var newObj = (this instanceof Array) ? [] : {};
+    for (i in this) {
+        if (i == 'clone')
+            continue;
+        if (this[i] && typeof this[i] == "object") {
+            newObj[i] = this[i].clone();
+        }
+        else
+            newObj[i] = this[i]
+    } return newObj;
+};
 
 function addConnections(elem, index) {
     // need to replace this with a tree of the network, then get child direct children of the element
@@ -139,6 +166,23 @@ function saveData(data, callback) {
     callback(data);
 }
 
+function displayPotoks(potoks)
+{
+    var form = $('#potoks');
+    var html = '';
+    for( var y = 0; y < potoks.length; y++) {
+        html += '<li>';
+        for( var i = 0; i < potoks[y].length; i++) {
+            html += potoks[y][i];
+
+            html += '-';
+        }
+        html += '</li>';
+    }
+    form.html(html);
+}
+
+
 function drawTable(matrix) {
     var table_html = '';
     var thead_html = '<tr><td>-</td>';
@@ -158,54 +202,29 @@ function drawTable(matrix) {
 
 function createNewPotok() {
     var potok = [];
-    var flag_end_potok = 0;
-    var flag_already_exist = 0;
-    for (var row = 1; row < matrix.length; row++) {
-        if (matrix[0][row] != 1) {
-            flag_already_exist = 1;
-        }
-        for (var col = 1; col < matrix[row].length; col++) {
-            if (matrix[row][col] == 1) {
-                if (flag_already_exist) {
-                    if (!flag_end_potok) {
-                        potok.push(row);
-                        matrix[0][row] = 1;
-                    }
-                    potok.push(col);
-                    matrix[0][col] = 1;
-                    for (var inner_row = 1; inner_row < matrix.length; inner_row++) {
-                        matrix[inner_row][col] = 0;
-                        // if(!flag_end_potok) {
-                        //     matrix[row][inner_row] = 0;
-                        // }
-                    }
-                    row = col - 1;
-                    flag_end_potok = 1;
-                    break;
+    var flag_end_potok = 1;
+    var next_row = 0;
+
+    matrix.forEach(function(row_item, row_key, row_arr) {
+        if(next_row === row_key || !next_row) {
+            matrix[row_key].some(function (col_item, col_key, col_arr) {
+                if (matrix[row_key][col_key] === 1) {
+                    matrix.forEach(function (inner_row_item, inner_row_key, inner_row_arr) {
+                        matrix[inner_row_key][col_key] = 0;
+                    });
+                    potok.push(col_key);
+                    next_row = col_key;
+                    return true;
                 }
-            } else if (col == matrix[row].length - 1 && flag_end_potok) {
-                return potok;
-            }
+            });
+
         }
+    });
 
-
-    }
-    // matrix.forEach(function (parent_item, parent_key, parent_array) {
-    //     matrix[parent_key].some(function (item, key, array) {
-    //         if (matrix[parent_key][key] == 1) {
-    //             potok.push(key);
-    //             parent_key = key;
-    //             matrix.forEach(function (children_item, children_key, children_array) {
-    //                 matrix[children_key][key] = 0;
-    //             });
-    //             return true;
-    //         }
-    //     })
-    // })
     return potok;
 }
 
-function descriptionActor() {
+function createPotoks() {
     var potok_arr = [];
     var potok = createNewPotok();
     while (potok.length > 0) {
@@ -217,23 +236,133 @@ function descriptionActor() {
 
 }
 
+
+
+function descriptionActors(matrix_original, potoks) {
+
+    var actors = [];
+    var data = [];
+
+    matrix_original.forEach(function (item, key, arr) {
+        if(key > 1000) {
+            actors[key] = 'M(';
+            for(var i = 0; i < potoks.length; i++) {
+                if(potoks[i].includes(key)) {
+                    actors[key] += i;
+                }
+            }
+            actors[key] += '),I(' + key + '),F(' + key + '),';
+            var count = 0;
+            var substr = '';
+            matrix_original[key].forEach(function(col_item, col_key, col_arr) {
+                if(matrix_original[key][col_key] === 1) {
+                    count++;
+                    element = col_key;
+                    for(var i = 0; i < potoks.length; i++) {
+                        if(potoks[i].includes(element)) {
+                            substr += ',I(' + element + '),M(' + i + ')';
+                        }
+                    }
+                }
+            });
+            actors[key] += count + substr + ',T(' + key + ')';
+        } else {
+            data[key] = 'Q' + key + ',';
+
+            var count = 0;
+            var substr = '';
+            matrix_original[key].forEach(function(col_item, col_key, col_arr) {
+                if(matrix_original[key][col_key] === 1) {
+                    count++;
+                    element = col_key;
+                    for(var i = 0; i < potoks.length; i++) {
+                        if(potoks[i].includes(element)) {
+                            substr += ',I(' + element + '),M(' + i + ')';
+                        }
+                    }
+                }
+            });
+
+            data[key] += count + substr + ',T(' + key + ')';
+        }
+    });
+
+    console.log(actors);
+    console.log(data);
+    displayActors(actors, $('#actors'));
+    displayActors(data, $('#data-generation'));
+    return actors;
+}
+
+function displayActors(actors, form) {
+    var html = '';
+    actors.forEach(function (key, element, arr) {
+        console.log(key);
+        html += '<li>' + key + '</li>';
+    });
+    form.html(html);
+}
+
+function addNode(x,y) {
+    if(x == null)
+        x = 0;
+    if(y == null) {
+        y = 0;
+    }
+    try {
+        nodes.add({
+            id: Math.random(),
+            borderWidth:1,
+            shape:'database',
+            x: x,
+            y: y,
+        });
+    }
+    catch (err) {
+        alert(err);
+    }
+
+}
+
+
+
+$(document).on('mousedown', '#data-source', function(){
+    flag=true;
+    index = 'data';
+    $(document).one('mousemove', '#mynetwork', function(){
+        if (flag){
+            coordinate_X = event.offsetX - network.body.view.translation.x/network.body.view.scale;
+            coordinate_Y = event.offsetY - network.body.view.translation.y/network.body.view.scale;
+            console.log(network.body.view.translation);
+            console.log(coordinate_X + '--' + coordinate_Y);
+            console.log(network);
+            addNode(coordinate_X,coordinate_Y);
+        }
+
+    });
+    coordinate_X = 0;
+    coordinate_Y = 0;
+});
+
+
+
 function objectToArrayWithoutKey(object) {
     var result = [];
     for(var key in object) {
         result.push(object[key]);
     }
+    result.pop();
     return JSON.stringify(result);
 }
 
 function setParamsNodes(nodes) {
     var result = [];
-
     for( var key in nodes) {
         nodes[key].id = key;
         nodes[key].label = key;
         result.push(nodes[key]);
     }
-
+    result.pop();
     console.log('nodes array',result);
     return JSON.stringify(result);
 }
@@ -253,3 +382,7 @@ $('#saveProjects').submit(function(event) {
 
     return true;
 });
+
+$(document).ready(function () {
+    exportNetwork();
+})

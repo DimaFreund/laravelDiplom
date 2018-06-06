@@ -56,7 +56,7 @@ div.table_description {
 table {
     width: 100%;
     border-collapse: collapse;
-    overflow: hidden;
+    overflow: scroll;
     z-index: 1;
 }
 td, th, .row, .col, .ff-fix {
