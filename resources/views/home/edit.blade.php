@@ -11,6 +11,11 @@
                         {{csrf_field()}}
                         {{ method_field('post') }}
                         <input type="text" class="form-control" name="name" value="{{$project->name}}">
+                        @foreach ($errors->all() as $error)
+                            <br>
+                            <span class="alert alert-danger">{{ $error }}</span>
+                            <br>
+                        @endforeach
                         <input id="json" type="hidden" name="json" class="form-control" value="{{$project->json}}">
                         <input id="data" type="hidden" name="data" class="form-control" value="{{$project->data}}">
                         <br>
@@ -36,8 +41,12 @@
                 <span id="operation">node</span> <br>
                 <table style="margin:auto;">
                     <tr>
-                        <td>id</td>
-                        <td><input id="node-id" value="new value"/></td>
+                        <input type="hidden" id="node-id" value="new value"/>
+                        <label for="choiceNodes">Актор</label>
+                        <input checked type="radio" name="type" for="choiceActors" value="actors">
+
+                        <label for="choiceEdges">Дані</label>
+                        <input type="radio" name="type" for="choiceData" value="data">
                     </tr>
                     <tr>
                         <td>label</td>

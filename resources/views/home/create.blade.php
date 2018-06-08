@@ -7,11 +7,18 @@
             <div class="col-md-12">
                 {!! Form::open(['route' => ['home.store'], 'id' => 'saveProjects']) !!}
                 <div class="form-group">
-                    <input type="text" class="form-control" name="name">
+
+                    <input placeholder="Name project" type="text" class="form-control" name="name">
+                    @foreach ($errors->all() as $error)
+                        <br>
+                        <span class="alert alert-danger">{{ $error }}</span>
+                        <br>
+                    @endforeach
                     <input id="json" type="hidden" name="json" class="form-control">
                     <input id="data" type="hidden" name="data" class="form-control">
                     <br>
                     <button class="btn btn-success">Submit</button>
+
                 </div>
                 {!! Form::close() !!}
             </div>
@@ -34,8 +41,12 @@
             <span id="operation">node</span> <br>
             <table style="margin:auto;">
                 <tr>
-                    <td>id</td>
-                    <td><input id="node-id" value="new value"/></td>
+                    <input type="hidden" id="node-id" value="new value"/>
+                    <label for="choiceNodes">Актор</label>
+                    <input checked type="radio" name="type" for="choiceActors" value="actors">
+
+                    <label for="choiceEdges">Дані</label>
+                    <input type="radio" name="type" for="choiceData" value="data">
                 </tr>
                 <tr>
                     <td>label</td>

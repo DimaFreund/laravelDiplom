@@ -61,6 +61,10 @@ class HomeController extends Controller
 
     public function store(Request $request)
     {
+	    $validatedData = $request->validate([
+		    'name' => 'required|unique:projects|max:255',
+	    ]);
+
         $project = new Project;
         $project->fill($request->all());
         $project->creator = Auth::user()->id;

@@ -1,14 +1,24 @@
 //create an array with nodes
  var jsonInfo, dataInfo;
+var nodes = [];
 
 jsonInfo = $('#json').val();
-dataInfo = $('#data').val()
-if(jsonInfo)
- jsonInfo = JSON.parse(jsonInfo);
-if(dataInfo)
- dataInfo = JSON.parse(dataInfo);
- console.log(jsonInfo);
- console.log(dataInfo);
+dataInfo = $('#data').val();
+if(jsonInfo) {
+    var jsonInfoObject = JSON.parse(jsonInfo);
+    jsonInfo = jsonInfoObject.info;
+    var jsonCount = jsonInfoObject.count;
+}
+if(dataInfo) {
+    var dataInfoObject = JSON.parse(dataInfo);
+    dataInfo = dataInfoObject.info;
+    var dataCount = dataInfoObject.count;
+}
+
+
+
+//jsonInfo = [    {id: 1, label: '1', x: -350, y: -540, shape:'database'},    {id: 2, label: '2', x: -250, y: -540, shape:'database'},    {id: 3, label: '3', x: -150, y: -540, shape:'database'},    {id: 4, label: '4', x: 0, y: -540, shape:'database'},    {id: 5, label: '5', x: 100, y: -540, shape:'database'},    {id: 6, label: '6', x: 200, y: -540, shape:'database'},    {id: 1001, label: '1', x: -300, y: -450},    {id: 1002, label: '2', x: -150, y: -450},    {id: 1003, label: '3', x: 0, y: -450},    {id: 1004, label: '4', x: 150, y: -450},    {id: 1005, label: '5', x: -375, y: -300},    {id: 1006, label: '6', x: -225, y: -300},    {id: 1007, label: '7', x: -75, y: -300},    {id: 1008, label: '8', x: 75, y: -300},    {id: 1009, label: '9', x: 225, y: -300},    {id: 1010, label: '10', x: -300, y: -150},    {id: 1011, label: '11', x: -150, y: -150},    {id: 1012, label: '12', x: -0, y: -150},    {id: 1013, label: '13', x: 150, y: -150},    {id: 1014, label: '14', x: -150, y: 0},    {id: 1015, label: '15', x: 0, y: 0},    {id: 1016, label: '16', x: -225, y: 150},    {id: 1017, label: '17', x: -75, y: 150},    {id: 1018, label: '18', x: 75, y: 150},    {id: 1019, label: '19', x: -150, y: 300},    {id: 1020, label: '20', x: 0, y: 300},    {id: 1021, label: '21', x: -75, y: 450},    {id: 1022, label: '22', x: -75, y: 600},];
+// dataInfo = [    {from: 1001, to: 1005},    {from: 1001, to: 1006},    {from: 1002, to: 1006},    {from: 1003, to: 1006},    {from: 1003, to: 1007},    {from: 1003, to: 1008},    {from: 1004, to: 1007},    {from: 1004, to: 1008},    {from: 1004, to: 1009},    {from: 1005, to: 1010},    {from: 1006, to: 1010},    {from: 1006, to: 1011},    {from: 1007, to: 1010},    {from: 1007, to: 1011},    {from: 1007, to: 1012},    {from: 1008, to: 1012},    {from: 1008, to: 1013},    {from: 1009, to: 1013},    {from: 1010, to: 1014},    {from: 1010, to: 1016},    {from: 1011, to: 1014},    {from: 1011, to: 1015},    {from: 1012, to: 1014},    {from: 1012, to: 1015},    {from: 1013, to: 1015},    {from: 1013, to: 1018},    {from: 1014, to: 1016},    {from: 1014, to: 1017},    {from: 1014, to: 1019},    {from: 1015, to: 1017},    {from: 1015, to: 1018},    {from: 1015, to: 1020},    {from: 1016, to: 1019},    {from: 1017, to: 1019},    {from: 1017, to: 1020},    {from: 1017, to: 1021},    {from: 1018, to: 1020},    {from: 1019, to: 1021},    {from: 1020, to: 1021},    {from: 1021, to: 1022},    {from: 1, to: 1001},    {from: 2, to: 1001},    {from: 3, to: 1002},    {from: 4, to: 1003},    {from: 5, to: 1003},    {from: 5, to: 1004},    {from: 6, to: 1004},];
 
  var nodes = new vis.DataSet(jsonInfo);
 
@@ -58,12 +68,11 @@ var options = {
         addNode: function (data, callback) {
             // filling in the popup DOM elements
             document.getElementById('operation').innerHTML = "Add Node";
-            document.getElementById('node-id').value = network.body.data.counter
-            document.getElementById('node-label').value = network.body.data.counter;
+            setValueTypeElement();
             document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
             document.getElementById('cancelButton').onclick = clearPopUp.bind();
             document.getElementById('network-popUp').style.display = 'block';
-            network.body.data.counter++;
+
         },
     },
     "physics": {
@@ -71,15 +80,45 @@ var options = {
         "minVelocity": 0.75
     }
 };
-var network = new vis.Network(container, data, options);
-network.body.data.counter = 0;
+$('#saveButton').on('click', function(){
+    if($('input[name="type"]:checked').val() == 'data') {
+        network.body.data.counterData++;
+    } else
+    {
+        network.body.data.counterNodes++;
+    }
+    console.log(network.body.data.counterData, network.body.data.counterNodes);
+})
+$('input[name="type"]').on('change', function() {
+    setValueTypeElement();
+})
 
+function setValueTypeElement(){
+    if($('input[name="type"]:checked').val() === 'data') {
+        document.getElementById('node-id').value = network.body.data.counterData;
+        document.getElementById('node-label').value = network.body.data.counterData;
+    } else {
+        document.getElementById('node-id').value = network.body.data.counterNodes;
+        document.getElementById('node-label').value = network.body.data.counterNodes - 1000;
+    }
+}
+
+var network = new vis.Network(container, data, options);
+network.body.data.counterNodes = 1001;
+network.body.data.counterData = 1;
 var matrix = [];
 var original_matrix = [];
 function exportNetwork() {
 
-    var nodes = objectToArray(network.getPositions());
+    var nodesClear = objectToArray(network.getPositions());
+    var infoNodes = network.body.data.nodes._data;
 
+    for(var key in nodesClear) {
+        nodesClear[key].label = infoNodes[nodesClear[key].id].label;
+        nodesClear[key].shape = infoNodes[nodesClear[key].id].shape;
+        nodes[nodesClear[key].id] = (nodesClear[key]);
+    }
+    console.log(nodes);
     // for (var i = 0; i <= network.body.data.nodes.length; i++) {
     //     matrix[i] = [];
     //     for (var y = 0; y <= network.body.data.nodes.length; y++) {
@@ -96,10 +135,8 @@ function exportNetwork() {
         })
     });
 
-    console.log(matrix);
 
     nodes.forEach(addConnections);
-    // console.log(nodes);
 
     var arrayFromTo = network.body.data.edges._data;
 
@@ -109,10 +146,9 @@ function exportNetwork() {
         matrix[arrayFromTo[item].from][arrayFromTo[item].to] = 1;
         original_matrix[arrayFromTo[item].from][arrayFromTo[item].to] = 1;
     })
-
+    console.log(matrix);
     drawTable(matrix);
     var potoks = createPotoks(matrix);
-    console.log(potoks);
     displayPotoks(potoks);
     descriptionActors(original_matrix, potoks);
 
@@ -131,7 +167,10 @@ function objectToArray(obj) {
         return obj[key];
     });
 }
-
+if(dataCount != null)
+network.body.data.counterData = dataCount;
+if(jsonCount != null)
+network.body.data.counterNodes = jsonCount;
 // Object.prototype.clonematrix = function() {
 //     var newObj = (this instanceof Array) ? [] : {};
 //     for (i in this) {
@@ -164,6 +203,9 @@ function cancelEdit(callback) {
 function saveData(data, callback) {
     data.id = document.getElementById('node-id').value;
     data.label = document.getElementById('node-label').value;
+    if($('input[name="type"]:checked').val() == 'data') {
+        data.shape = "database";
+    }
     clearPopUp();
     callback(data);
 }
@@ -173,31 +215,39 @@ function displayPotoks(potoks)
     var form = $('#potoks');
     var html = '';
     for( var y = 0; y < potoks.length; y++) {
-        html += '<li>';
+        html += '<li>M<span>' + y + '</span> = ';
         for( var i = 0; i < potoks[y].length; i++) {
-            html += potoks[y][i];
-
-            html += '-';
+            html += setNameData(potoks[y][i]);
+            if(i != potoks[y].length-1)
+                html += '-';
         }
         html += '</li>';
     }
     form.html(html);
 }
 
+function setNameData(key, flag) {
+    var result = nodes[key].label;
+
+    if(key < 1000 && !flag) {
+        result = 'D' + result;
+    }
+
+    return result;
+}
 
 function drawTable(matrix) {
     var table_html = '';
     var thead_html = '<tr><td>-</td>';
     matrix.forEach(function (item, key, array) {
-        thead_html += '<td>' + key + '</td>';
-        table_html += '<tr><td>' + key + '</td>';
+        thead_html += '<td>' + setNameData(key) + '</td>';
+        table_html += '<tr><td>' + setNameData(key) + '</td>';
         matrix[key].forEach(function (inner_item, inner_key, inner_array) {
             table_html += '<td>' + inner_item + '</td>';
         })
         table_html += '</tr>';
     })
     thead_html += '</tr>';
-    console.log(table_html);
     $('#empty-table').html(table_html);
     $('#empty-thead').html(thead_html);
 }
@@ -233,7 +283,6 @@ function createPotoks() {
         potok_arr.push(potok);
         potok = createNewPotok();
     }
-    console.log(potok_arr);
     return potok_arr;
 
 }
@@ -247,13 +296,13 @@ function descriptionActors(matrix_original, potoks) {
 
     matrix_original.forEach(function (item, key, arr) {
         if(key > 1000) {
-            actors[key] = 'M(';
+            actors[key] = 'M<span>';
             for(var i = 0; i < potoks.length; i++) {
                 if(potoks[i].includes(key)) {
                     actors[key] += i;
                 }
             }
-            actors[key] += '),I(' + key + '),F(' + key + '),';
+            actors[key] += '</span>,I<span>' + setNameData(key) + '</span>,F<span>' + setNameData(key) + '</span>,';
             var count = 0;
             var substr = '';
             matrix_original[key].forEach(function(col_item, col_key, col_arr) {
@@ -262,14 +311,14 @@ function descriptionActors(matrix_original, potoks) {
                     element = col_key;
                     for(var i = 0; i < potoks.length; i++) {
                         if(potoks[i].includes(element)) {
-                            substr += ',I(' + element + '),M(' + i + ')';
+                            substr += ',I<span>' + setNameData(element) + '</span>,M<span>' + i + '</span>';
                         }
                     }
                 }
             });
-            actors[key] += count + substr + ',T(' + key + ')';
+            actors[key] += count + substr + ',T<span>' + setNameData(key) + '</span>';
         } else {
-            data[key] = 'Q' + key + ',';
+            data[key] = 'Q<span>' + setNameData(key, true) + '</span>,';
 
             var count = 0;
             var substr = '';
@@ -279,18 +328,16 @@ function descriptionActors(matrix_original, potoks) {
                     element = col_key;
                     for(var i = 0; i < potoks.length; i++) {
                         if(potoks[i].includes(element)) {
-                            substr += ',I(' + element + '),M(' + i + ')';
+                            substr += ',I<span>' + setNameData(element) + '</span>,M<span>' + i + '</span>';
                         }
                     }
                 }
             });
 
-            data[key] += count + substr + ',T(' + key + ')';
+            data[key] += count + substr + ',T<span>' + key + '</span>';
         }
     });
 
-    console.log(actors);
-    console.log(data);
     displayActors(actors, $('#actors'));
     displayActors(data, $('#data-generation'));
     return actors;
@@ -299,8 +346,7 @@ function descriptionActors(matrix_original, potoks) {
 function displayActors(actors, form) {
     var html = '';
     actors.forEach(function (key, element, arr) {
-        console.log(key);
-        html += '<li>' + key + '</li>';
+        html += '<li>A<span>' + setNameData(element, true) + '</span> = ' + key + '</li>';
     });
     form.html(html);
 }
@@ -335,9 +381,6 @@ $(document).on('mousedown', '#data-source', function(){
         if (flag){
             coordinate_X = event.offsetX - network.body.view.translation.x/network.body.view.scale;
             coordinate_Y = event.offsetY - network.body.view.translation.y/network.body.view.scale;
-            console.log(network.body.view.translation);
-            console.log(coordinate_X + '--' + coordinate_Y);
-            console.log(network);
             addNode(coordinate_X,coordinate_Y);
         }
 
@@ -353,32 +396,29 @@ function objectToArrayWithoutKey(object) {
     for(var key in object) {
         result.push(object[key]);
     }
-    result.pop();
-    return JSON.stringify(result);
+    return JSON.stringify({info:result, count: network.body.data.counterData});
 }
 
 function setParamsNodes(nodes) {
     var result = [];
+    var infoNodes = network.body.data.nodes._data;
     for( var key in nodes) {
         nodes[key].id = key;
-        nodes[key].label = key;
+        nodes[key].label = infoNodes[key].label;
+        nodes[key].shape = infoNodes[key].shape;
         result.push(nodes[key]);
     }
-    result.pop();
-    console.log('nodes array',result);
-    return JSON.stringify(result);
+    return result;
 }
 
 $('#saveProjects').submit(function(event) {
 
-    var nodesFinaly = setParamsNodes(network.getPositions());
+    var nodesFinaly = JSON.stringify({info:setParamsNodes(network.getPositions()), count:network.body.data.counterNodes});
+    console.log(nodesFinaly);
+    console.log(network.body.data.nodes._data)
     var dataFinally = objectToArrayWithoutKey(network.body.data.edges._data);
+    console.log(dataFinally);
     var nodes = new vis.DataSet();
-    console.log(network);
-    console.log(network.getConnectedEdges());
-    console.log(network.body.data.edges._data);
-    console.log('result');
-    console.log(JSON.stringify(nodesFinaly));
     $('#json').val(nodesFinaly);
     $('#data').val(dataFinally);
 
